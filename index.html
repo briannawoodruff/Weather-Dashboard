@@ -1,16 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./assets/css/reset.css"/>
-    <link rel="stylesheet" href="./assets/css/style.css"/>
+    <link rel="stylesheet" href="./assets/css/reset.css" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
     <title>Weather Dashboard</title>
 </head>
 
 <body>
+    <header>
+        <h1>Weather Dashboard</h1>
+    </header>
+
+    <main>
+        <aside class="city-search">
+            <h2>Search for a City:</h2>
+            <input type="text" id="city" placeholder="City Name" />
+            <button class="search">Search</button>
+            <hr>
+            <div id="past-cities"></div>
+        </aside>
+
+        <section class="container">
+            <div class="current-city">
+                <h3><span id="city-name">Choose a City</span></h3>
+                <p>Temp: <span id="temp">-</span></p>
+                <p>Wind: <span id="wind">-</span></p>
+                <p>Humidity: <span id="humidity">-</span></p>
+                <p>UV Index: <span id="uv-index">-</span></p>
+            </div>
+
+            <div class="forecast">
+                <h4>5-Day Forecast:</h4>
+                <div class="card">
+                    <h5>Date</h5>
+                    <p>Temp: </p>
+                    <p>Wind: </p>
+                    <p>Humidity: </p>
+                </div>
+                <div class="card">
+                    <h5>Date</h5>
+                    <p>Temp: </p>
+                    <p>Wind: </p>
+                    <p>Humidity: </p>
+                </div>
+                <div class="card">
+                    <h5>Date</h5>
+                    <p>Temp: </p>
+                    <p>Wind: </p>
+                    <p>Humidity: </p>
+                </div>
+                <div class="card">
+                    <h5>Date</h5>
+                    <p>Temp: </p>
+                    <p>Wind: </p>
+                    <p>Humidity: </p>
+                </div>
+                <div class="card">
+                    <h5>Date</h5>
+                    <p>Temp: </p>
+                    <p>Wind: </p>
+                    <p>Humidity: </p>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <script src="./assets/js/script.js"></script>
 </body>
+
 </html>
