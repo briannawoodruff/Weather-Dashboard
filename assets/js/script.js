@@ -9,7 +9,7 @@ var pastCityBtns = document.querySelector('#past-cities');
 var fiveDayEl = document.querySelector('.five-day-cards');
 var apiKey = "c3e754a93a4f13ded8f976731dbbdfc4";
 
-// local storage for cities
+// local storage for cities and creates new buttons based on what is saved in local storage
 if (JSON.parse(localStorage.getItem('cityInput')) !== null) {
     cityInput = JSON.parse(localStorage.getItem("cityInput"));
     for (var i = 0; i < cityInput.length; i++) {
@@ -17,10 +17,10 @@ if (JSON.parse(localStorage.getItem('cityInput')) !== null) {
         var addedCity = document.createElement("button");
         addedCity.textContent = showCity;
         addedCity.setAttribute("class", "prev-city")
-        // addedCity.setAttribute("data-city", showCity);
         pastCityBtns.appendChild(addedCity);
     }
 }
+// array where cityNames are pushed to
 var cityInput = [];
 
 
@@ -46,43 +46,52 @@ function fetchData(newCity) {
         .then(function (weatherData) {
             console.log(weatherData);
 
+            // appends inputed city's name
             var currentName = document.getElementById('city-name');
             currentName.textContent = weatherData.name;
+
+            // appends inputed city's date
             var currentDate = document.getElementById('city-date');
+            // momentjs function
             function displayTime() {
                 var rightNow = moment();
                 currentDate.textContent = rightNow.format('(' + 'L' + ')');
             }
             displayTime();
 
+            // adds icon of weather to img element
             var iconEl = document.getElementById('city-icon');
             var icon = weatherData.weather[0].icon;
-            // var currentIcon = document.createElement("img");
             iconEl.setAttribute("src", "http://openweathermap.org/img/wn/" + icon + "@2x.png");
 
+            // adds temp to span and converted to F
             var currentTemp = document.getElementById('temp');
-            var currentWind = document.getElementById('wind');
-            var currentHumidity = document.getElementById('humidity');
+            currentTemp.textContent = convertTemp(weatherData.main.temp) + " °F";
 
-            currentTemp.textContent = convertTemp(weatherData.main.temp) + " F";
+            // adds wind to span and converted to imperial
+            var currentWind = document.getElementById('wind');
             currentWind.textContent = convertToImperial(weatherData.wind.speed) + " MPH";
+
+            // adds humidity to span
+            var currentHumidity = document.getElementById('humidity');
             currentHumidity.textContent = weatherData.main.humidity + "%";
 
-
+            // gets inputed city's lat and lon to be used in fetchUV function
             var lat = weatherData.coord.lat;
             var lon = weatherData.coord.lon;
 
+            // calls next functions to save to local storage and call other apis
             pastCities();
             fetchUV(lat, lon);
             fetch5Day(cityName);
 
+            // clears input field
             inputField.value = ''
         })
 }
 
 // fetchUV for city searched
 function fetchUV(lat, lon) {
-    // var apiKey = "c3e754a93a4f13ded8f976731dbbdfc4";
     var requestUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey;
 
     fetch(requestUrl)
@@ -92,11 +101,12 @@ function fetchUV(lat, lon) {
         .then(function (weatherData) {
             console.log(weatherData);
 
+            // adds UV data to span
             var currentUV = document.getElementById('uv-index');
             var uvI = weatherData.current.uvi;
             currentUV.textContent = uvI;
-            // console.log(uvI);
 
+            // changes color depending on severity
             if (uvI <= 2) {
                 currentUV.classList = "low"
             } else if (uvI > 2 && uvI <= 8) {
@@ -109,9 +119,8 @@ function fetchUV(lat, lon) {
         })
 }
 
-// fetchUV for city searched
+// fetch5Day for city searched
 function fetch5Day(cityName) {
-    // var apiKey = "c3e754a93a4f13ded8f976731dbbdfc4";
     var requestUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + apiKey;
 
     fetch(requestUrl)
@@ -121,33 +130,54 @@ function fetch5Day(cityName) {
         .then(function (weatherData) {
             console.log(weatherData);
 
+            // clears the fiveDayEl each time searched
             fiveDayEl.textContent = "";
 
             var forecast = weatherData.list;
-            console.log(forecast)
+            // for loop going through the 5 days and putting them in divs
             for (var i = 5; i < forecast.length; i = i + 8) {
                 var forecastCards = forecast[i];
 
+                // creating each div
                 var cardDiv = document.createElement("div");
-                fiveDayEl.classList = "card";
-                fiveDayEl.append(cardDiv);
+                cardDiv.classList = "card";
 
-                var forecastDate = document.createElement("h5")
+                // adding date element
+                var forecastDate = document.createElement("h5");
                 forecastDate.textContent = moment.unix(forecastCards.dt).format("MMM D, YYYY");
                 cardDiv.appendChild(forecastDate);
 
-                //create an image element
-                var dayIcon = document.createElement("img")
+                // adding icon for each day
+                var dayIcon = document.createElement("img");
                 var newIcon = forecastCards.weather[0].icon;
-               dayIcon.setAttribute("src", "http://openweathermap.org/img/wn/" + newIcon + "@2x.png");
+                dayIcon.setAttribute("src", "http://openweathermap.org/img/wn/" + newIcon + "@2x.png");
                 cardDiv.appendChild(dayIcon);
 
+                // adding temp for each day
+                var forecastTemp = document.createElement("p");
+                forecastTemp.textContent = convertTemp(forecastCards.main.temp) + " °F";
+                cardDiv.appendChild(forecastTemp);
+
+                // adding wind for each day
+                var forecastWind = document.createElement("p");
+                forecastWind.textContent = convertToImperial(forecastCards.wind.speed) + " MPH";
+                cardDiv.appendChild(forecastWind);
+
+                // adding humidity for each day
+                var forecastHum = document.createElement("p");
+                forecastHum.textContent = forecastCards.main.humidity + "%";
+                cardDiv.appendChild(forecastHum);
+
+                // appending to the fiveDayEl section
+                fiveDayEl.append(cardDiv);
             };
         })
 }
 
+// eventListener for search button
 searchButton.addEventListener("click", fetchData);
 
+// saving past city to local storage and creating a button to be searched again
 function pastCities() {
     var showCity = inputField.value;
     var addedCity = document.createElement("button");
@@ -158,11 +188,13 @@ function pastCities() {
     cityInput.push(showCity)
     localStorage.setItem("cityInput", JSON.stringify(cityInput));
 
+    // eventListener for the past seached buttons
     addedCity.addEventListener("click", function (event) {
         event.preventDefault();
         recallCity(this)
     });
 
+    // makes new variable based on what's in the textContent to send to fetchData function when each button is clicked
     function recallCity(target) {
         var newCity = target.textContent
         fetchData(newCity)
