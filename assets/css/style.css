@@ -74,6 +74,11 @@ hr {
     margin: 25px 25px 0 30px;
 }
 
+#city-icon {
+    display: block;
+    width: 100px;
+}
+
 .current-city {
     border: 1px solid black;
     margin: 20px 0 20px 0;
@@ -95,6 +100,27 @@ h4 {
     margin-left: 5px;
     display: block;
     width: 100%;
+}
+
+.low {
+    padding: 5px;
+    background-color: green;
+    color:white;
+    border-radius: 4px;
+}
+
+.moderate {
+    padding: 5px;
+    background-color: yellow;
+    color:white;
+    border-radius: 4px;
+}
+
+.high {
+    padding: 5px;
+    background-color: red;
+    color:white;
+    border-radius: 4px;
 }
 
 .forecast {

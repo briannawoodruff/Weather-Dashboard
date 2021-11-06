@@ -26,7 +26,10 @@
 
         <section class="container">
             <div class="current-city">
-                <h3><span id="city-name">Choose a City</span></h3>
+                <h3><span id="city-name">Choose a City</span>
+                    <span id="city-date"></span>
+                    <img id="city-icon"></img>
+                </h3>
                 <p>Temp: <span id="temp">-</span></p>
                 <p>Wind: <span id="wind">-</span></p>
                 <p>Humidity: <span id="humidity">-</span></p>
@@ -35,40 +38,43 @@
 
             <div class="forecast">
                 <h4>5-Day Forecast:</h4>
-                <div class="card">
-                    <h5>Date</h5>
-                    <p>Temp: </p>
-                    <p>Wind: </p>
-                    <p>Humidity: </p>
-                </div>
-                <div class="card">
-                    <h5>Date</h5>
-                    <p>Temp: </p>
-                    <p>Wind: </p>
-                    <p>Humidity: </p>
-                </div>
-                <div class="card">
-                    <h5>Date</h5>
-                    <p>Temp: </p>
-                    <p>Wind: </p>
-                    <p>Humidity: </p>
-                </div>
-                <div class="card">
-                    <h5>Date</h5>
-                    <p>Temp: </p>
-                    <p>Wind: </p>
-                    <p>Humidity: </p>
-                </div>
-                <div class="card">
-                    <h5>Date</h5>
-                    <p>Temp: </p>
-                    <p>Wind: </p>
-                    <p>Humidity: </p>
-                </div>
+                <section class="five-day-cards">
+                    <div class="card">
+                        <h5>Date</h5>
+                        <p>Temp: </p>
+                        <p>Wind: </p>
+                        <p>Humidity: </p>
+                    </div>
+                    <div class="card">
+                        <h5>Date</h5>
+                        <p>Temp: </p>
+                        <p>Wind: </p>
+                        <p>Humidity: </p>
+                    </div>
+                    <div class="card">
+                        <h5>Date</h5>
+                        <p>Temp: </p>
+                        <p>Wind: </p>
+                        <p>Humidity: </p>
+                    </div>
+                    <div class="card">
+                        <h5>Date</h5>
+                        <p>Temp: </p>
+                        <p>Wind: </p>
+                        <p>Humidity: </p>
+                    </div>
+                    <div class="card">
+                        <h5>Date</h5>
+                        <p>Temp: </p>
+                        <p>Wind: </p>
+                        <p>Humidity: </p>
+                    </div>
+                </section>
             </div>
         </section>
     </main>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="./assets/js/script.js"></script>
 </body>
 
