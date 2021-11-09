@@ -1,28 +1,13 @@
-/* 
-get access to input field 
-get access to the button
-create function to fetch api data when button is clicked
-*/
+// access DOM elements
 var inputField = document.querySelector("#city");
 var searchButton = document.querySelector(".search");
 var pastCityBtns = document.querySelector('#past-cities');
 var fiveDayEl = document.querySelector('.five-day-cards');
 var apiKey = "c3e754a93a4f13ded8f976731dbbdfc4";
 
-// local storage for cities and creates new buttons based on what is saved in local storage
-if (JSON.parse(localStorage.getItem('cityInput')) !== null) {
-    cityInput = JSON.parse(localStorage.getItem("cityInput"));
-    for (var i = 0; i < cityInput.length; i++) {
-        var showCity = cityInput[i];
-        var addedCity = document.createElement("button");
-        addedCity.textContent = showCity;
-        addedCity.setAttribute("class", "prev-city")
-        pastCityBtns.appendChild(addedCity);
-    }
-}
-// array where cityNames are pushed to
-var cityInput = [];
-
+// localstorage
+var cityInput = localStorage.getItem("userInput") || "[]";
+var cityArr = JSON.parse(cityInput);
 
 // kelvin to F conversion
 function convertTemp(temp) {
@@ -34,10 +19,10 @@ function convertToImperial(meter) {
 }
 
 // fetchData for city searched
-function fetchData(newCity) {
-    var cityName = inputField.value || newCity;
+function fetchData(searchedCity) {
+    // var cityName = inputField.value || newCity;
 
-    var requestUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + apiKey;
+    var requestUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + searchedCity + "&appid=" + apiKey;
 
     fetch(requestUrl)
         .then(function (response) {
@@ -80,10 +65,13 @@ function fetchData(newCity) {
             var lat = weatherData.coord.lat;
             var lon = weatherData.coord.lon;
 
+            // fetchDay based on textcontent
+            var newCity = currentName.textContent
+
             // calls next functions to save to local storage and call other apis
             pastCities();
             fetchUV(lat, lon);
-            fetch5Day(cityName);
+            fetch5Day(newCity);
 
             // clears input field
             inputField.value = ''
@@ -120,8 +108,8 @@ function fetchUV(lat, lon) {
 }
 
 // fetch5Day for city searched
-function fetch5Day(cityName) {
-    var requestUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + apiKey;
+function fetch5Day(newCity) {
+    var requestUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + newCity + "&appid=" + apiKey;
 
     fetch(requestUrl)
         .then(function (response) {
@@ -174,31 +162,38 @@ function fetch5Day(cityName) {
         })
 }
 
-// eventListener for search button
-searchButton.addEventListener("click", fetchData);
+// eventListener for search button and saving to localstorage
+searchButton.addEventListener("click", function () {
+    var searchedCity = inputField.value;
+    fetchData(searchedCity);
+    cityArr.push(searchedCity);
+    localStorage.setItem("userInput", JSON.stringify(cityArr));
+    pastCities();
+    // console.log(searchedCity)
+})
 
-// saving past city to local storage and creating a button to be searched again
+// creating a button to be searched again
 function pastCities() {
-    var showCity = inputField.value;
-    var addedCity = document.createElement("button");
-    addedCity.textContent = showCity || newCity;
-    addedCity.setAttribute("class", "prev-city");
-    addedCity.setAttribute("type", "button");
-    pastCityBtns.prepend(addedCity);
-    cityInput.push(showCity)
-    localStorage.setItem("cityInput", JSON.stringify(cityInput));
+    pastCityBtns.innerHTML = "";
+    for (var i = 0; i < cityArr.length; i++) {
+        var addedCity = document.createElement("button");
 
-    // eventListener for the past seached buttons
-    addedCity.addEventListener("click", function (event) {
-        event.preventDefault();
-        recallCity(this)
-    });
+        addedCity.setAttribute("class", "prev-city");
+        addedCity.setAttribute("value", cityArr[i]);
 
-    // makes new variable based on what's in the textContent to send to fetchData function when each button is clicked
-    function recallCity(target) {
-        var newCity = target.textContent
-        fetchData(newCity)
-        target.clear
+        // setting value
+        var city = addedCity.getAttribute("value")
+        addedCity.textContent = city;
+        pastCityBtns.prepend(addedCity);
+
+        // eventListener based on the set value to be searched
+        function button(city) {
+            addedCity.addEventListener("click", function () {
+                fetchData(city);
+                // console.log(city)
+            })
+        }
+        button(city);
     }
-
 }
+pastCities();
